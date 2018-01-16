@@ -1,7 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: rloli
- * Date: 15/01/2018
- * Time: 21:40
- */
+session_start();
+if(!isset($_SESSION) || !isset($_SESSION['nomeUsuario'])) {
+  header('location: ./');
+}
+?>
+
+<h1>Home</h1>
+<p>Acesso restrito.</p>

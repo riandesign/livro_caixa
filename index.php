@@ -28,10 +28,10 @@ endif;
               <form method="post" id="form_login">
                   <div class="form-row">
                       <div class="col-md-12">
-                          <input type="text" name="usuario" class="form-control form-control-lg flat-input" id="username" placeholder="Nome de Usuário" required>
+                          <input type="text" value="renanlido" name="usuario" class="form-control form-control-lg flat-input" id="username" placeholder="Nome de Usuário" required>
                       </div>
                       <div class="col-md-12">
-                          <input type="password" name="senha" class="form-control form-control-lg flat-input" id="password" placeholder="Senha" required>
+                          <input type="password" value="123456" name="senha" class="form-control form-control-lg flat-input" id="password" placeholder="Senha" required>
                       </div>
                       <input type="submit" value="Entrar" class="btn btn-lg btn-block btn-login" id="btn_login">
                   </div>
@@ -42,29 +42,45 @@ endif;
   </div>
 
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
   <script>
-      $(document).ready(function () {
-          $('#log_erro').hide();//Esconde log de erros;
+  $(document).ready(function () {
+    $('#log_erro').hide();//Esconde log de erros;
 
-          $('#form_login').submit(function (event) {
-              var $form = $(this);
-              var serializedData = $form.serialize();
+    $('#form_login').submit(function (event) {
+      var $form = $(this);
+      var serializedData = $form.serialize();
 
-              $.ajax({
-                  type: 'post',
-                  url: 'login.php',
-                  data: serializedData,
-                  dataType: 'jason',
-                  encode: true
-              }).done(function (data) {
-                  console.log(data);
-                });
-              event.preventDefault();
-          })
-      })
+      $.ajax({
+        type: 'POST',
+        data: serializedData,
+        url: 'login.php',
+        // beforeSend : function () {
+        //   $('.aviso-loading').show();
+        // },
+        success : function(data) {
+          //$('.aviso-loading').hide();
+          if (data == 1) {
+            //alert('Login feito com sucesso!');
+            window.location.href = "home.php";
+          } else {
+            alert('Usuário ou senha incorretos.');
+          }
+        },
+        error : function(a,b,c) {
+          alert("Erro ao tentar fazer login.");
+          //alert('Erro: ' + a[b] + ' ' + c);
+        }
+      });
+
+      // Proibe o form HTML submiter, evitando o refresh da página
+      return false;
+    })
+
+  })
   </script>
   </body>
 </html>

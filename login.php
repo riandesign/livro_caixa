@@ -19,8 +19,11 @@
         if(!isset($_SESSION))   //verifica se há sessão aberta
             session_start();   //Inicia seção
         //Abrindo seções
+        // $_SESSION['usuarioID']=$row['id'];
+        // $_SESSION['nomeUsuario']=$row['nome'];
+
         $_SESSION['usuarioID']=$row['id'];
-        $_SESSION['nomeUsuario']=$row['nome'];
+        $_SESSION['nomeUsuario']=$row['usuario'];
+
         exit;
     }
-
