@@ -1,8 +1,9 @@
 <?php
+
     require_once "conexao.php";
 
     $usuario = $_POST['usuario'];
-    $senha = $_POST['senha'];
+    $senha = sha1($_POST['senha']);
 
     $query="SELECT * FROM usuarios WHERE usuario = '$usuario' AND senha = '$senha'";
     $result = mysqli_query($mysqli,$query);
@@ -16,14 +17,13 @@
         echo 0;
     }else{
         echo 1;	                 //Responde sucesso
-        if(!isset($_SESSION))   //verifica se há sessão aberta
+        if(!isset($_SESSION)) {   //verifica se há sessão aberta
             session_start();   //Inicia seção
-        //Abrindo seções
-        // $_SESSION['usuarioID']=$row['id'];
-        // $_SESSION['nomeUsuario']=$row['nome'];
-
-        $_SESSION['usuarioID']=$row['id'];
-        $_SESSION['nomeUsuario']=$row['usuario'];
-
-        exit;
+            //Abrindo seções
+            $_SESSION['usuarioID'] = $row['id'];
+            $_SESSION['nomeUsuario'] = $row['usuario'];
+            $_SESSION['logado'] = true;
+            exit;
+        }
     }
+
