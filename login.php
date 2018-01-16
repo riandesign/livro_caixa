@@ -1,21 +1,26 @@
 <?php
-    include_once ('conexao.php');
+    require_once "conexao.php";
 
-    $login = $_POST['login'];
+    $usuario = $_POST['usuario'];
     $senha = $_POST['senha'];
 
-    echo $login,$senha;
+    $query="SELECT * FROM usuarios WHERE usuario = '$usuario' AND senha = '$senha'";
+    $result = mysqli_query($mysqli,$query);
+    if (!$result) {
+    printf("Error: %s\n", mysqli_error($mysqli));
+    exit();
+}
+    $row = mysqli_fetch_array($result);
 
-    $query = "select * from  usuarios WHERE usuario='".$login."' and senha='".sha1($senha)."'";
-    $resultados = mysqli_query($mysqli, $query) or die(mysqli_error($mysqli));
-    $res = mysqli_fetch_array($resultados);
-    if (@mysqli_num_rows($resultados) == 0){
+    if(mysqli_num_rows($result)==0){
         echo 0;
-    }else {
-        echo 1;
-        if (isset($_SESSION)) ;
-        session_start();
-        $_SESSION['usuarioID']=$res['id'];
-        $_SESSION['nomeUsuario']=$res['usuario'];
+    }else{
+        echo 1;	                 //Responde sucesso
+        if(!isset($_SESSION))   //verifica se há sessão aberta
+            session_start();   //Inicia seção
+        //Abrindo seções
+        $_SESSION['usuarioID']=$row['id'];
+        $_SESSION['nomeUsuario']=$row['nome'];
         exit;
     }
+

@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+if(isset($_SESSION['logado']) &&  $_SESSION['logado'] == 'SIM'):
+header("Location: home.php");
+endif;
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
@@ -20,12 +28,12 @@
               <form method="post" id="form_login">
                   <div class="form-row">
                       <div class="col-md-12">
-                          <input type="text" name="username" class="form-control form-control-lg flat-input" id="login" placeholder="username">
+                          <input type="text" name="usuario" class="form-control form-control-lg flat-input" id="username" placeholder="Nome de Usuário" required>
                       </div>
                       <div class="col-md-12">
-                          <input type="password" name="password" class="form-control form-control-lg flat-input" id="senha" placeholder="password">
+                          <input type="password" name="senha" class="form-control form-control-lg flat-input" id="password" placeholder="Senha" required>
                       </div>
-                      <button type="submit" class="btn btn-lg btn-block btn-login">Login</button>
+                      <input type="submit" value="Entrar" class="btn btn-lg btn-block btn-login" id="btn_login">
                   </div>
               </form>
               <h3 class="text-center wdi-red" id="log_erro">Usuário ou senha incorretos.</h3>
@@ -39,23 +47,22 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
   <script>
       $(document).ready(function () {
-          $('#log_erro').hide();//Mostra log de erro se a senha ou usuário estiverem errado;
-          $('#form_login').submit(function () {
-              var login = $('#login').val();
-              var senha = $('#senha').val();
-              $.ajax({
-                  url:"login.php",
-                  type:"post",
-                  data: "login="+login+"senha="+senha
-              }).done(function (result) {
-                  if(result===1){
-                      location.href='restrito.php'
-                  } else {
-                      $('#log_erro').show();
+          $('#log_erro').hide();//Esconde log de erros;
 
-                  }
-              });
-              return false;
+          $('#form_login').submit(function (event) {
+              var $form = $(this);
+              var serializedData = $form.serialize();
+
+              $.ajax({
+                  type: 'post',
+                  url: 'login.php',
+                  data: serializedData,
+                  dataType: 'jason',
+                  encode: true
+              }).done(function (data) {
+                  console.log(data);
+                });
+              event.preventDefault();
           })
       })
   </script>
