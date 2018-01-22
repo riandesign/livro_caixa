@@ -3,7 +3,7 @@ include_once ("../server/conexao.php");
 ?>
 
 <div class="container">
-    <div class="col-md-6 offset-3">
+  <div class="col-md-6 offset-3">
     <?php
         $query = "SELECT * FROM `usuarios` ORDER BY  'nome' ASC " ;
 
@@ -37,16 +37,38 @@ include_once ("../server/conexao.php");
         endif;
         $mysqli->close();
     ?>
-
+    <div class="col-md-6 offset-4">
+      <input class="btn btn-sm btn-primary" type="button" name="novo_usuario" value="Novo Usuário" data-toggle="modal" data-target="#myModal">
     </div>
-    <input type="button" name="novo_usuario" value="Cadastrar">
+  </div>
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-    $(document).ready(function(){
-        $('#container-list tr').click(function () {
-            $('.tb-usr').removeClass('ativo');
-            $(this).addClass('ativo');
-        })
-    });
+  $(document).ready(function(){
+    $('#container-list tr').click(function () {
+        $('.tb-usr').removeClass('ativo');
+        $(this).addClass('ativo');
+        $('#myModal').modal('show')
+    })
+  });
 </script>
