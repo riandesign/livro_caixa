@@ -68,14 +68,16 @@ $(document).ready(function(){
       type: 'POST',
       data: dados.serialize(),
       url: 'login/login.php'
-    }).done(function(data){
+    })
+    .done(function(data){
       var login = JSON.parse(data)['login']
       if(login==1){
         window.location.href = 'lancamentos/caixa.php';
       }else{
         $('#log_erro').show();
       }
-    }).fail(function(){
+    })
+    .fail(function(){
       alert('Falha no sistema, tente novamente mais tarde.')
     })
   }
