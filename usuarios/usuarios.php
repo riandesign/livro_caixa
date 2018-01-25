@@ -4,39 +4,23 @@ include_once ("../server/conexao.php");
 
 <div class="container">
   <div class="col-md-6 offset-3">
-    <?php
-        $query = "SELECT * FROM `usuarios` ORDER BY  'nome' ASC " ;
 
-        if ($result = $mysqli->query($query)):
-    ?>
-        <table class="table table-hover" id="table">
-            <thead>
-            <tr>
-                <th colspan="2" class="text-center">USUÁRIOS</th>
-            </tr>
-            <tr>
-                <th class="text-center">Nome</th>
-                <th class="text-center">Nome de Usuário</th>
-            </tr>
-            </thead>
-            <tbody id="container-list">
-                <?php
-                    while ($row = $result ->fetch_assoc()):
-                ?>
-                <tr class="tb-usr" data-ref="<?php echo $row["id"]; ?>">
-                    <td class="text-center"><?php echo $row["nome"]; ?></td>
-                    <td class="text-center"><?php echo $row["usuario"]; ?></td>
-                </tr>
-                <?php
-                    endwhile;
-                ?>
-            </tbody>
-        </table>
-    <?php
-            $result ->close();
-        endif;
-        $mysqli->close();
-    ?>
+
+    <table class="table table-hover" id="table">
+        <thead>
+        <tr>
+            <th colspan="2" class="text-center">USUÁRIOS</th>
+        </tr>
+        <tr>
+            <th class="text-center">Nome</th>
+            <th class="text-center">Nome de Usuário</th>
+        </tr>
+        </thead>
+        <tbody id="container-list"></tbody>
+    </table>
+
+
+
     <div class="col-md-6 offset-4">
       <input class="btn btn-sm btn-primary" type="button" name="novo_usuario" value="Novo Usuário" data-toggle="modal" data-target="#myModal">
     </div>
@@ -95,7 +79,9 @@ include_once ("../server/conexao.php");
     var usuario_id;
     var usuario_data;
 
-    $('#container-list tr').click(function () {
+    //$('#container-list tr').click(function () { // Deste jeito não funciona após carregar construir tabela via ajax
+    $('#container-list').on('click', 'tr', function () {
+
         $('.tb-usr').removeClass('ativo'); //Interface
         $(this).addClass('ativo');        //Interface
 
@@ -138,7 +124,9 @@ include_once ("../server/conexao.php");
 
       var formulario = $(this);
       var retorno = alteraCadastro(formulario);
+      return false;
     });
+
 
     function alteraCadastro(dados){
       $.ajax({
@@ -153,6 +141,8 @@ include_once ("../server/conexao.php");
         if(atualiza==1){
           $('.aviso-loading').hide();
           mostra_sucesso('Salvo com sucesso');
+          $('#myModal').modal('hide');
+          ajax_load_usuarios();
         }else{
           alert("Erro ao atualizar dados.");
         }
@@ -168,9 +158,41 @@ include_once ("../server/conexao.php");
       }, 1500);
     }
 
-    $("#modal-cancelar").click(function(){
-      $("#table").load(" #table");
-    });
+    // $("#modal-cancelar").click(function(){
+    //   $("#table").load(" #table");
+    // });
+
+
+
+    ajax_load_usuarios();
+
+    function ajax_load_usuarios() {
+      $('.aviso-loading').show();
+
+      $.ajax({
+        url:"../usuarios/ajax/usuarios.php",
+      })
+      .done(function(data){
+        $('.aviso-loading').hide();
+        //alert(JSON.stringify(data));
+        constroi_tabela(data);
+      })
+      .fail(function(){
+        alert("Erro ao carregar dados");
+      });
+    }
+
+
+    function constroi_tabela(json_obj) {
+      var content = $('#container-list');
+      content.html('');
+
+      $.each(json_obj, function(key, value) {
+        content.append('<tr class="tb-usr" data-ref="' + value.id + '"><td class="text-center">' + value.nome + '</td><td class="text-center">' + value.usuario + '</td></tr>');
+      });
+    }
+
+
 
   });
 </script>
